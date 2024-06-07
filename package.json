@@ -1,0 +1,26 @@
+{
+  "name": "ws-schema",
+  "version": "0.0.1",
+  "description": "provide event/payload structure with typescript & run-time safety to ws message events.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/FlynnHillier/ws-schema.git"
+  },
+  "author": "flynnhillier",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/FlynnHillier/ws-schema/issues"
+  },
+  "homepage": "https://github.com/FlynnHillier/ws-schema#readme",
+  "dependencies": {
+    "ws": "^8.17.0",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/ws": "^8.5.10"
+  }
+}
