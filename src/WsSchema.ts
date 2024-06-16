@@ -2,11 +2,9 @@ import { WebSocket } from "ws";
 import { ZodType, z, ZodError } from "zod";
 
 /**
- * Given the generic type Record<string, ZodType> allow for construction of functions to emit type-safe data for given events.
+ * Defines ws events, and their associated payloads.
  *
- * The keys within the provided Record type act as the 'eventIDs' in the emitted event.
- *
- * The associated zod types provided act as the type of the data payload for the given eventID
+ * Provides methods to both construct outbound events, and handle incoming events.
  */
 export class WsSchema<T extends Record<string, ZodType>> {
   /**
@@ -40,17 +38,14 @@ export class WsSchema<T extends Record<string, ZodType>> {
     };
   }
 
-  private sendData<E extends Extract<keyof T, string>>(
-    event: E,
-    data: z.infer<T[E]>
-  ) {
+  private sendData<E extends Extract<keyof T, string>>(event: E, data: z.infer<T[E]>) {
     return {
       /**
        *
        * @param to who to send the data to
        * @returns
        */
-      to: (to: Parameters<typeof this.sendDataTo<E>>[2]) => {
+      to: (...to: WebSocket[]) => {
         return this.sendDataTo(event, data, to);
       },
       /**
@@ -74,7 +69,7 @@ export class WsSchema<T extends Record<string, ZodType>> {
   private sendDataTo<E extends Extract<keyof T, string>>(
     event: E,
     data: z.infer<T[E]>,
-    to: WebSocket | WebSocket[]
+    to: WebSocket[]
   ) {
     return {
       /**
@@ -100,7 +95,7 @@ export class WsSchema<T extends Record<string, ZodType>> {
         const json = JSON.parse(incomingMessageString);
 
         // If message content is in invalid structure
-        if (!json.event || !json.data || typeof json.event !== "string") {
+        if (!json || !json.event || !json.data || typeof json.event !== "string") {
           this.errors.incomingMessage?.invalidStructure?.();
           return false;
         }
@@ -118,10 +113,9 @@ export class WsSchema<T extends Record<string, ZodType>> {
 
         // if payload of incoming message is not valid for event specified
         try {
-          this.validators[json.event].parse(json.data);
+          this.validators[json.event]!.parse(json.data);
         } catch (e) {
-          if (e instanceof ZodError)
-            this.errors.incomingMessage?.invalidEventPayload?.(json.event);
+          if (e instanceof ZodError) this.errors.incomingMessage?.invalidEventPayload?.(json.event);
           return false;
         }
 
@@ -129,8 +123,7 @@ export class WsSchema<T extends Record<string, ZodType>> {
         on[json.event]?.(json.data);
         return true;
       } catch (e) {
-        if (e instanceof SyntaxError)
-          this.errors.incomingMessage?.invalidStructure?.();
+        if (e instanceof SyntaxError) this.errors.incomingMessage?.invalidStructure?.();
         return false;
       }
     };
@@ -142,12 +135,9 @@ export class WsSchema<T extends Record<string, ZodType>> {
    * @param data the data to emit
    * @param to sockets to emit the event to
    */
-  private static emit<D extends any>( //TODO: make this type only serializable types
-    eventID: string,
-    data: D,
-    to: WebSocket | WebSocket[]
-  ) {
-    const sockets = new Set<WebSocket>(Array.isArray(to) ? to : [to]);
+  private static emit<D extends any>(eventID: string, data: D, to: WebSocket[]) {
+    //TODO: make this type only serializable types
+    const sockets = new Set<WebSocket>(to);
 
     sockets.forEach((socket) =>
       socket.send(
@@ -163,19 +153,3 @@ export class WsSchema<T extends Record<string, ZodType>> {
 type BuildReceiver<T extends Record<string, any>> = Partial<{
   [K in keyof T]: (arg: z.infer<T[K]>) => any;
 }>;
-
-export type ExtractWSMessageTemplateGeneric<T> = T extends WsSchema<infer E>
-  ? E
-  : never;
-
-/**
- * Extract the data type for a given event from a WSMessageTemplate class
- *
- * T - the template with the desired specified message event typings
- *
- * E - the event we want to extract the type for
- */
-export type WSMessageData<
-  T extends WsSchema<any>,
-  E extends keyof ExtractWSMessageTemplateGeneric<T>
-> = ExtractWSMessageTemplateGeneric<T>[E];
