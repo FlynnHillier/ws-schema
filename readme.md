@@ -1,14 +1,32 @@
-# WS-Schema
+<h1 align="center">Welcome to ws-schema 👋</h1>
+<p>
+  <a href="https://www.npmjs.com/package/react-live-relative-time" target="_blank">
+    <img alt="Version" src="https://img.shields.io/npm/v/react-live-relative-time.svg">
+  </a>
+  <a href="https://github.com/FlynnHillier/react-live-relative-time/blob/master/LICENSE" target="_blank">
+    <img alt="License: MIT" src="https://img.shields.io/github/license/FlynnHillier/react-live-relative-time" />
+  </a>
+  <img alt="Downloads" src="https://img.shields.io/npm/d18m/react-live-relative-time.svg" />
+</p>
 
-Create type-safe schemas for ws message events.
+> Create type-safe schemas for ws message events. <br>
+> Easily construct and handle ws message content, with type-safety and inferrance for payloads specific to each defined event.
 
-Easily construct and handle ws message content, with type-safety and inferrance for payloads specific to each defined event.
+### 🏠 [Homepage](https://github.com/FlynnHillier/ws-schema#readme)
+
+## Install
+
+```sh
+npm i ws-schema
+```
 
 ## Usage
 
 ### Defining a schema
 
-Define a schema using the `WsSchema` class. Here, the keys represent the name of each event you which to define in your schema. The value pairs then represent the structure of the payload to be associated to that event.
+Define a schema using the `WsSchema` class.
+
+Here, the keys represent the name of each event you which to define in your schema. The value pairs then define the structure of the payload associated to that event.
 
 ```typescript
 const wsSchema = new WsSchema({
@@ -33,7 +51,7 @@ Using the schema you have now defined, you may now easily construct and send mes
 // Define the payload for one of the events defined in our schema
 const hello = wsSchema.send("message").data("hello world");
 
-// Select how we want to use this constructed object
+// Select how we want to use this constructed event
 
 // JSON stringified
 hello.stringify();
@@ -85,3 +103,27 @@ ws.on("message", (incomingMessage) => {
   onIncomingMessage(incomingMessage.data);
 });
 ```
+
+## Author
+
+👤 **flynnhillier**
+
+- Github: [@FlynnHillier](https://github.com/FlynnHillier)
+- LinkedIn: [@flynn-hillier](https://linkedin.com/in/flynn-hillier)
+
+## 🤝 Contributing
+
+Contributions, issues and feature requests are welcome!<br />Feel free to check [issues page](https://github.com/FlynnHillier/react-live-relative-time/issues).
+
+## Show your support
+
+Give a ⭐️ if this project helped you!
+
+## 📝 License
+
+Copyright © 2024 [flynnhillier](https://github.com/FlynnHillier).<br />
+This project is [MIT](https://github.com/FlynnHillier/react-live-relative-time/blob/master/LICENSE) licensed.
+
+---
+
+_This README was generated with ❤️ by [readme-md-generator](https://github.com/kefranabg/readme-md-generator)_
