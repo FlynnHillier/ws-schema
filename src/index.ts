@@ -1,1 +1,1 @@
-export { WsSchema } from "./wsSchema";
+export { WsSchema } from "./WsSchema";
