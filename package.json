@@ -1,6 +1,6 @@
 {
   "name": "ws-schema",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "provide event/payload structure with typescript & run-time safety to ws message events.",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
