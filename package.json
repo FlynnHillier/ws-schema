@@ -1,14 +1,16 @@
 {
   "name": "ws-schema",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "provide event/payload structure with typescript & run-time safety to ws message events.",
   "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
   "files": [
     "dist"
   ],
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "tsup src/index.ts --format cjs,esm --dts"
+    "build": "tsup src/index.ts"
   },
   "repository": {
     "type": "git",
