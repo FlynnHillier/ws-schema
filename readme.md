@@ -17,7 +17,7 @@
 ## Install
 
 ```sh
-npm i ws-schema
+npm i ws-schema zod
 ```
 
 ## Usage
@@ -26,9 +26,12 @@ npm i ws-schema
 
 Define a schema using the `WsSchema` class.
 
-Here, the keys represent the name of each event you which to define in your schema. The value pairs then define the structure of the payload associated to that event.
+Here, the keys represent the name of each event you which to define in your schema. The value pairs then define the structure of the payload associated to that event, using the zod library.
 
 ```typescript
+import { WsSchema } from "ws-schema";
+import { z } from "zod";
+
 const wsSchema = new WsSchema({
   heartbeat: z.object({}),
   message: z.string(),
