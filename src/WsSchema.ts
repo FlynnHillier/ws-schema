@@ -1,5 +1,5 @@
 import { WebSocket } from "ws";
-import { ZodType, z } from "zod";
+import { ZodError, ZodType, z } from "zod";
 
 /**
  * Given the generic type Record<string, ZodType> allow for construction of functions to emit type-safe data for given events.
@@ -98,31 +98,50 @@ export class WsSchema<T extends Record<string, ZodType>> {
     );
   }
 
+  /**
+   *
+   * @param on define only events we wish to handle, with callbacks provided to run when event is recieved.
+   * @param config.errors callbacks to run on errors.
+   * @returns A callback to handle incoming stringified payloads
+   */
   public receiver(
     on: Partial<{
       [K in keyof T]: (arg: z.infer<T[K]>) => any;
-    }>
+    }>,
+    config: Partial<{
+      errors: Partial<{
+        onPayloadIsNonJSON: (payload: string) => any;
+        onMalformedJSON: (recieved: Record<string, any>) => any;
+        onUnrecognisedEvent: (recieved: { event: string; payload: Record<string, any> }) => any;
+        onInvalidPayload: (recieved: { event: string; payload: Record<string, any> }) => any;
+      }>;
+    }> = {}
   ) {
     return (incomingMessageString: string) => {
       try {
         const json = JSON.parse(incomingMessageString);
 
-        if (
-          !json.event ||
-          !json.data ||
-          typeof json.event !== "string" ||
-          !Object.keys(on).includes(json.event)
-        )
-          return;
+        if (!json.event || !json.data || typeof json.event !== "string")
+          config.errors?.onMalformedJSON?.(json);
 
-        this.validators[json.event]!.parse(json.data);
+        if (!this.validators[json.event])
+          config.errors?.onUnrecognisedEvent?.({ event: json.event, payload: json.data });
+
+        //Callback has not been defined for this specific event.
+        if (!Object.keys(on).includes(json.event)) return;
+
+        try {
+          this.validators[json.event]!.parse(json.data);
+        } catch (e) {
+          if (e instanceof ZodError)
+            config.errors?.onInvalidPayload?.({ event: json.event, payload: json.data });
+          else throw e;
+        }
 
         on[json.event]?.(json.data);
       } catch (e) {
-        if (typeof window !== "undefined") {
-          console.error("received malform event payload on ws event", incomingMessageString);
-        }
-        return; //TODO: change this
+        if (e instanceof SyntaxError) config.errors?.onPayloadIsNonJSON?.(incomingMessageString);
+        else throw e;
       }
     };
   }
