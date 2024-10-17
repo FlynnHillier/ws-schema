@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      '@types/ws':
+        specifier: ^8.5.12
+        version: 8.5.12
       ws:
         specifier: ^8.17.0
         version: 8.18.0
@@ -18,9 +21,6 @@ importers:
       '@changesets/cli':
         specifier: ^2.27.9
         version: 2.27.9
-      '@types/ws':
-        specifier: ^8.5.12
-        version: 8.5.12
       tsup:
         specifier: ^8.1.0
         version: 8.3.0(typescript@5.6.3)
