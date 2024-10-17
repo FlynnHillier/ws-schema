@@ -98,7 +98,11 @@ export class WsSchema<T extends Record<string, ZodType>> {
     );
   }
 
-  public receiver(on: BuildReceiver<T>) {
+  public receiver(
+    on: Partial<{
+      [K in keyof T]: (arg: z.infer<T[K]>) => any;
+    }>
+  ) {
     return (incomingMessageString: string) => {
       try {
         const json = JSON.parse(incomingMessageString);
@@ -123,21 +127,3 @@ export class WsSchema<T extends Record<string, ZodType>> {
     };
   }
 }
-
-type BuildReceiver<T extends Record<string, any>> = Partial<{
-  [K in keyof T]: (arg: z.infer<T[K]>) => any;
-}>;
-
-export type ExtractWSMessageTemplateGeneric<T> = T extends WsSchema<infer E> ? E : never;
-
-/**
- * Extract the data type for a given event from a WSMessageTemplate class
- *
- * T - the template with the desired specified message event typings
- *
- * E - the event we want to extract the type for
- */
-export type WSMessageData<
-  T extends WsSchema<any>,
-  E extends keyof ExtractWSMessageTemplateGeneric<T>
-> = ExtractWSMessageTemplateGeneric<T>[E];
