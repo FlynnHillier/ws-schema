@@ -1,6 +1,6 @@
 {
   "name": "ws-schema",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "provide event/payload structure with typescript & run-time safety to ws message events.",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -24,14 +24,11 @@
   "homepage": "https://github.com/FlynnHillier/ws-schema#readme",
   "dependencies": {
     "ws": "^8.17.0",
-    "zod": "^3.23.8"
-  },
-  "peerDependencies": {
-    "zod": "^3.23.8"
+    "zod": "^3.23.8",
+    "@types/ws": "^8.5.12"
   },
   "devDependencies": {
     "@changesets/cli": "^2.27.9",
-    "@types/ws": "^8.5.10",
     "tsup": "^8.1.0",
     "typescript": "^5.2.2"
   },
