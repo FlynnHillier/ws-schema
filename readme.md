@@ -1,12 +1,12 @@
 <h1 align="center">Welcome to ws-schema 👋</h1>
 <p>
-  <a href="https://www.npmjs.com/package/react-live-relative-time" target="_blank">
-    <img alt="Version" src="https://img.shields.io/npm/v/react-live-relative-time.svg">
+  <a href="https://www.npmjs.com/package/ws-schema" target="_blank">
+    <img alt="Version" src="https://img.shields.io/npm/v/ws-schema.svg">
   </a>
-  <a href="https://github.com/FlynnHillier/react-live-relative-time/blob/master/LICENSE" target="_blank">
-    <img alt="License: MIT" src="https://img.shields.io/github/license/FlynnHillier/react-live-relative-time" />
+  <a href="https://github.com/FlynnHillier/ws-schema/blob/master/LICENSE" target="_blank">
+    <img alt="License: MIT" src="https://img.shields.io/github/license/FlynnHillier/ws-schema" />
   </a>
-  <img alt="Downloads" src="https://img.shields.io/npm/d18m/react-live-relative-time.svg" />
+  <img alt="Downloads" src="https://img.shields.io/npm/d18m/ws-schema.svg" />
 </p>
 
 > Create type-safe schemas for ws message events. <br>
